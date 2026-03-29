@@ -20,10 +20,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<!-- CSS -->
 <link rel="stylesheet" href="css/style.css">
 
+<!-- ✅ Font Awesome (FALTAVA ISSO) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
-/* 🔥 Coloca * automático nos campos obrigatórios */
 label::after {
     content: " *";
     color: red;
@@ -42,18 +45,20 @@ label::after {
     </a>
 </div>
 
+<!-- ✅ NAV ATUALIZADA -->
 <nav>
-    <a href="index.php">Início</a>
-    <a href="cadastro.php">Cadastro</a>
-    <a href="contato.php" class="active">Contato</a>
-    <a href="sobre.php">Sobre</a>
+    <a href="index.php"><i class="fas fa-home"></i> Início</a> 
+    <a href="cadastro.php"><i class="fa fa-user"></i> Cadastro</a> 
+     <a href="doação"><i class="fas fa-hand-holding-heart"></i> Doação</a>
+    <a href="contato.php"><i class="fas fa-envelope"></i> Contato</a> 
+    <a href="sobre.php"><i class="fas fa-info-circle"></i> Sobre</a> 
 </nav>
 
 </header>
 
 <main class="main-content">
 
-<h2><strong>Entre em Contato</strong></h2>
+<h2><strong><i class="fas fa-envelope"></i> Entre em Contato</strong></h2>
 <p>Veja onde nos encontrar:</p>
 
 <p><strong>Endereço:</strong> St. N, Área Especial QNN 14 - Ceilândia, Brasília - DF</p>
@@ -62,7 +67,7 @@ label::after {
 <p><strong>Email:</strong> conectasolidaria@gmail.com</p>
 
 <div class="info-item">
-<h3>Horário de Funcionamento:</h3>
+<h3><i class="fas fa-clock"></i> Horário de Funcionamento:</h3>
 <p>Segunda a Sábado: 7:00 às 22:00 (Presencial)</p>
 <p>Domingo: 7:00 às 22:00 (Online)</p>
 </div>
@@ -75,7 +80,7 @@ label::after {
 <?php endif; ?>
 
 <!-- FORMULÁRIO -->
-<h3>Fale conosco</h3>
+<h3><i class="fas fa-paper-plane"></i> Fale conosco</h3>
 
 <form method="POST">
 
@@ -89,7 +94,9 @@ label::after {
 <textarea name="mensagem" required></textarea>
 
 <br>
-<button type="submit" class="btn btn-primary">Enviar</button>
+<button type="submit" class="btn btn-primary">
+    <i class="fas fa-paper-plane"></i> Enviar
+</button>
 
 </form>
 
