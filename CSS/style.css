@@ -21,14 +21,14 @@ header{
 
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 500;
 
     border-bottom: 1px solid #ddd; /* 🔥 linha elegante */
 }
 
 /* LOGO */
 .logo {
-    width: 180px; /* 🔥 menor */
+    width: 250px; /* 🔥 menor */
     height: auto;
     transition: 0.3s;
 }
@@ -40,20 +40,20 @@ header{
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 30px;
 }
 
 /* MENU */
 nav{
     display: flex;
-    gap: 20px;
+    gap: 70px;
 }
 
 nav a{
     color: black;
     text-decoration: none;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 nav a:hover{
