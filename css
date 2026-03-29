@@ -1,0 +1,189 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    background-color: #dbeafe;
+}
+/* CONTEÚDO */
+main{
+    padding: 40px;
+    background-color: #f8f9fa;
+}
+
+/* CABEÇALHO */
+header{
+    background-color: white;
+    color: black;
+    padding: 10px 30px; /* 🔥 mais fino */
+    display: flex;
+    justify-content: flex-start; /* 🔥 tudo pra esquerda */
+    align-items: center;
+    gap: 30px; /* espaço entre logo e menu */
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    border-bottom: 1px solid #ddd; /* 🔥 linha elegante */
+}
+
+/* LOGO */
+.logo {
+    width: 180px; /* 🔥 menor */
+    height: auto;
+    transition: 0.3s;
+}
+
+.logo:hover{
+    transform: scale(1.05);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* MENU */
+nav{
+    display: flex;
+    gap: 20px;
+}
+
+nav a{
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+nav a:hover{
+    color: #2563eb;
+}
+
+/* LINK ATIVO */
+.active {
+    text-decoration: underline;
+}
+
+/* SEÇÕES */
+section{
+    margin-bottom: 40px;
+}
+
+/* BANNER */
+.banner{
+    background: linear-gradient(135deg,#2563eb,#1e40af);
+    color: white;
+    padding: 60px 30px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+.banner h2{
+    font-size: 28px;
+}
+
+.banner p{
+    font-size: 18px;
+}
+
+/* CARDS */
+.card-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card{
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    width: 280px;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.card:hover{
+    transform: translateY(-8px);
+}
+
+.card img{
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.card h3{
+    margin-top: 0;
+}
+
+/* RODAPÉ */
+footer{
+    background-color: #111;
+    color: white;
+    text-align: center;
+    padding: 25px;
+}
+
+/* FORMULÁRIO */
+form{
+    max-width: 500px;
+}
+
+input, select, textarea{
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+form button{
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+form button:hover{
+    background-color: #1e40af;
+}
+
+/* BOTÃO DOAR */
+.btn-doar{
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-doar:hover{
+    background-color: #1e40af;
+    transform: scale(1.05);
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px){
+
+    header{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo{
+        width: 150px;
+    }
+
+    .card-container{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    main{
+        padding: 20px;
+    }
+}
