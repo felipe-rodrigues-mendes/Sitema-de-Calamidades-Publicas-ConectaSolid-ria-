@@ -1,5 +1,4 @@
 <?php
-// ARRAY DAS CIDADES E NECESSIDADES (ATUALIZADO)
 $cidades = [
     [
         "nome" => "Brasil",
@@ -24,17 +23,16 @@ $cidades = [
     ]
 ];
 
-// Verifica se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $nome = $_POST["nome"];
-    $cpf = $_POST["cpf"]; // ✅ corrigido
-    $email = $_POST["email"];
-    $cidade = $_POST["cidade"];
-    $necessidade = $_POST["necessidade"];
-    $descricao = $_POST["descricao"];
+    $nome = htmlspecialchars($_POST["nome"]);
+    $cpf = htmlspecialchars($_POST["cpf"]);
+    $email = htmlspecialchars($_POST["email"]);
+    $cidade = htmlspecialchars($_POST["cidade"]);
+    $necessidade = htmlspecialchars($_POST["necessidade"]);
+    $descricao = htmlspecialchars($_POST["descricao"]);
 
-    echo "<h3>Cadastro realizado com sucesso!</h3>";
+    echo "<h3 style='color:green;'>Cadastro realizado com sucesso!</h3>";
     echo "Nome: $nome <br>";
     echo "CPF: $cpf <br>";
     echo "Email: $email <br>";
@@ -53,10 +51,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<!-- CSS -->
 <link rel="stylesheet" href="css/style.css">
 
+<!-- ✅ FONT AWESOME (FALTAVA) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
-/* 🔥 Adiciona * vermelho automaticamente */
 label::after {
     content: " *";
     color: red;
@@ -68,18 +69,22 @@ label::after {
 <body>
 
 <header>
+
 <div class="logo-container">
     <a href="index.php">
         <img src="images/logo.png" class="logo">
     </a>
 </div>
 
+<!-- ✅ NAV PADRONIZADA -->
 <nav>
-    <a href="index.php">Início</a>
-    <a href="cadastro.php" class="active">Cadastro</a>
-    <a href="contato.php">Contato</a>
-    <a href="sobre.php">Sobre</a>
+    <a href="index.php"><i class="fas fa-home"></i> Início</a> 
+    <a href="cadastro.php"><i class="fa fa-user"></i> Cadastro</a> 
+     <a href="doação"><i class="fas fa-hand-holding-heart"></i> Doação</a>
+    <a href="contato.php"><i class="fas fa-envelope"></i> Contato</a> 
+    <a href="sobre.php"><i class="fas fa-info-circle"></i> Sobre</a> 
 </nav>
+
 </header>
 
 <main>
@@ -116,8 +121,10 @@ foreach ($cidades as $cidade) {
 <label>Descrição</label>
 <textarea name="descricao"></textarea>
 
-<br>
-<button type="submit" class="btn btn-primary">Cadastrar</button>
+<br><br>
+<button type="submit" class="btn btn-primary">
+    <i class="fas fa-check"></i> Cadastrar
+</button>
 
 </form>
 
