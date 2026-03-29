@@ -37,7 +37,9 @@ $cidades = [
             "Ração",
             "Caixas de transporte para animais",
             "Materiais de limpeza",
-            "Roupas e agasalhos"
+            "Roupas e agasalhos",
+            "Colchões e cobertores",
+            "Alimentos não perecíveis"
         ]
     ],
     [
@@ -48,7 +50,10 @@ $cidades = [
             "Roupas de cama e banho",
             "Kits de higiene",
             "Água potável",
-            "Alimentos não perecíveis"
+            "Alimentos não perecíveis",
+            "Materiais de limpeza",
+            "Roupas e agasalhos",
+            "Fraldas descartáveis"
         ]
     ],
     [
@@ -60,7 +65,9 @@ $cidades = [
             "Colchões e cobertores",
             "Roupas de cama e banho",
             "Kits de higiene",
-            "Fraldas descartáveis"
+            "Fraldas descartáveis",
+            "Materiais de limpeza",
+            "Roupas e agasalhos"
         ]
     ],
     [
@@ -72,7 +79,9 @@ $cidades = [
             "Colchões e cobertores",
             "Remédios",
             "Roupas de cama e banho",
-            "Kits de higiene"
+            "Kits de higiene",
+            "Materiais de limpeza",
+            "Roupas e agasalhos"
         ]
     ]
 ];
@@ -125,16 +134,15 @@ $cidades = [
     <img src="<?php echo htmlspecialchars($cidade['imagem']); ?>">
     <h3><?php echo htmlspecialchars($cidade['nome']); ?></h3>
 
+    <ul>
     <?php foreach ($cidade['necessidades'] as $item): ?>
-        <p>- <?php echo htmlspecialchars($item); ?></p>
+        <li><?php echo htmlspecialchars($item); ?></li>
     <?php endforeach; ?>
+    </ul>
 
-    <!-- 🔥 BOTÃO DOAR COM ÍCONE -->
-    <a href="cadastro.php?cidade=<?php echo urlencode($cidade['nome']); ?>" class="btn-doar">
-    
-    <button type="submit">Doar</button>
-    
-    </a>
+   <a href="cadastro.php?cidade=<?php echo urlencode($cidade['nome']); ?>" class="btn btn-primary">
+    Doar
+</a>
 
 </div>
 
