@@ -7,7 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = htmlspecialchars($_POST["email"]);
     $mensagemTexto = htmlspecialchars($_POST["mensagem"]);
 
-    // Aqui você pode depois enviar email ou salvar no banco
     $mensagem = "Mensagem enviada com sucesso!";
 }
 ?>
@@ -18,7 +17,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <meta charset="UTF-8">
 <title>Contato</title>
 
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <link rel="stylesheet" href="css/style.css">
+
+<style>
+/* 🔥 Coloca * automático nos campos obrigatórios */
+label::after {
+    content: " *";
+    color: red;
+}
+</style>
 
 </head>
 
@@ -30,21 +40,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <a href="index.php">
         <img src="images/logo.png" class="logo">
     </a>
-    <h1></h1>
 </div>
 
 <nav>
     <a href="index.php">Início</a>
     <a href="cadastro.php">Cadastro</a>
     <a href="contato.php" class="active">Contato</a>
-    <a href="sobre.php" class="active">Sobre</a>
+    <a href="sobre.php">Sobre</a>
 </nav>
 
 </header>
 
 <main class="main-content">
 
-<h2>Entre em Contato</h2>
+<h2><strong>Entre em Contato</strong></h2>
 <p>Veja onde nos encontrar:</p>
 
 <p><strong>Endereço:</strong> St. N, Área Especial QNN 14 - Ceilândia, Brasília - DF</p>
@@ -79,7 +88,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <label>Mensagem</label>
 <textarea name="mensagem" required></textarea>
 
-<button type="submit">Enviar</button>
+<br>
+<button type="submit" class="btn btn-primary">Enviar</button>
 
 </form>
 
