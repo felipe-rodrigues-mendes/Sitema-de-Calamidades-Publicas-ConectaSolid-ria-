@@ -114,7 +114,7 @@ Facilitar a arrecadação e distribuição de doações de forma rápida, organi
 <i class="fas fa-laptop"></i>
 <h3>O que o sistema faz</h3>
 <ul>
-<li>Cadastro de instituições</li>
+<li>Cadastro de usuario</li>
 <li>Divulgação de necessidades</li>
 <li>Conexão entre doadores e comunidades</li>
 <li>Centralização de informações</li>
