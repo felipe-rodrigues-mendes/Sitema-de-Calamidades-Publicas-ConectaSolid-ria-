@@ -109,10 +109,11 @@ $cidades = [
 </div>
 
 <nav>
-    <a href="index.php" class="active">Início</a>
-    <a href="cadastro.php">Cadastro</a>
-    <a href="contato.php">Contato</a>
-    <a href="sobre.php">Sobre</a>
+    <a href="index.php"><i class="fas fa-home"></i> Início</a> 
+    <a href="cadastro.php"><i class="fa fa-user"></i> Cadastro</a> 
+     <a href="doação"><i class="fas fa-hand-holding-heart"></i> Doação</a>
+    <a href="contato.php"><i class="fas fa-envelope"></i> Contato</a> 
+    <a href="sobre.php"><i class="fas fa-info-circle"></i> Sobre</a> 
 </nav>
 
 </header>
@@ -141,7 +142,7 @@ $cidades = [
     </ul>
 
    <a href="cadastro.php?cidade=<?php echo urlencode($cidade['nome']); ?>" class="btn btn-primary">
-    Doar
+    <i class="fas fa-hand-holding-heart"></i> Doar
 </a>
 
 </div>
