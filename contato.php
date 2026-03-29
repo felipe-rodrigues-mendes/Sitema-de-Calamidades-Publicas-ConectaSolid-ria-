@@ -1,0 +1,105 @@
+<?php
+$mensagem = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $nome = htmlspecialchars($_POST["nome"]);
+    $email = htmlspecialchars($_POST["email"]);
+    $mensagemTexto = htmlspecialchars($_POST["mensagem"]);
+
+    // Aqui você pode depois enviar email ou salvar no banco
+    $mensagem = "Mensagem enviada com sucesso!";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Contato</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo-container">
+    <a href="index.php">
+        <img src="images/logo.png" class="logo">
+    </a>
+    <h1></h1>
+</div>
+
+<nav>
+    <a href="index.php">Início</a>
+    <a href="cadastro.php">Cadastro</a>
+    <a href="contato.php" class="active">Contato</a>
+    <a href="sobre.php" class="active">Sobre</a>
+</nav>
+
+</header>
+
+<main class="main-content">
+
+<h2>Entre em Contato</h2>
+<p>Veja onde nos encontrar:</p>
+
+<p><strong>Endereço:</strong> St. N, Área Especial QNN 14 - Ceilândia, Brasília - DF</p>
+<p><strong>CEP:</strong> 72220-140</p>
+<p><strong>Telefone:</strong> (61) 3345-8714</p>
+<p><strong>Email:</strong> conectasolidaria@gmail.com</p>
+
+<div class="info-item">
+<h3>Horário de Funcionamento:</h3>
+<p>Segunda a Sábado: 7:00 às 22:00 (Presencial)</p>
+<p>Domingo: 7:00 às 22:00 (Online)</p>
+</div>
+
+<!-- MENSAGEM -->
+<?php if ($mensagem != ""): ?>
+    <p style="color: green; font-weight: bold;">
+        <?php echo $mensagem; ?>
+    </p>
+<?php endif; ?>
+
+<!-- FORMULÁRIO -->
+<h3>Fale conosco</h3>
+
+<form method="POST">
+
+<label>Nome</label>
+<input type="text" name="nome" required>
+
+<label>Email</label>
+<input type="email" name="email" required>
+
+<label>Mensagem</label>
+<textarea name="mensagem" required></textarea>
+
+<button type="submit">Enviar</button>
+
+</form>
+
+<!-- MAPA -->
+<div class="map-container">
+<iframe 
+src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3838.513807983534!2d-48.11235582347999!3d-15.829570084815776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935bccfba936f021%3A0x6f07a0a68fc87b4a!2sCEP%20-%20ET%20de%20Ceil%C3%A2ndia!5e0!3m2!1spt-BR!2sbr!4v1763260149736!5m2!1spt-BR!2sbr"
+width="100%" 
+height="450" 
+style="border:0;" 
+allowfullscreen="" 
+loading="lazy">
+</iframe>
+</div>
+
+</main>
+
+<footer>
+<p>&copy; 2026 ConectaSolidária</p>
+</footer>
+
+</body>
+</html>
