@@ -152,20 +152,22 @@ form button:hover{
 }
 
 /* BOTÃO DOAR */
-.btn-doar{
+.btn-primary{
     background-color: #2563eb;
     color: white;
     border: none;
     padding: 12px;
     border-radius: 6px;
     cursor: pointer;
+    text-decoration: none; /* 🔥 AQUI resolve o sublinhado */
 }
 
-.btn-doar:hover{
+.btn-primary:hover{
     background-color: #1e40af;
     transform: scale(1.05);
+    text-decoration: none; /* 🔥 garante no hover também */
 }
-
+    
 /* RESPONSIVO */
 @media (max-width: 768px){
 
@@ -186,4 +188,7 @@ form button:hover{
     main{
         padding: 20px;
     }
+}
+a.btn-primary {
+    text-decoration: none !important;
 }
