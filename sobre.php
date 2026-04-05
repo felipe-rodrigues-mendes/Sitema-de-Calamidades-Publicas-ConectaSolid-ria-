@@ -8,8 +8,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-/* ESTILO EXTRA SÓ DO SOBRE */
-
 .sobre-container {
     max-width: 1000px;
     margin: auto;
@@ -68,72 +66,54 @@
 
 <body>
 
-<header>
+<?php include("menu.php"); ?>
 
-<div class="logo-container">
-    <a href="index.php">
-        <img src="images/logo.png" class="logo">
-    </a>
-    <h1></h1>
-</div>
-
-<nav>
-    <a href="index.php"><i class="fas fa-home"></i> Início</a> 
-    <a href="cadastro.php"><i class="fa fa-user"></i> Cadastro</a> 
-    <a href="doacao.php"><i class="fas fa-hand-holding-heart"></i> Doação</a>
-    <a href="contato.php"><i class="fas fa-envelope"></i> Contato</a> 
-    <a href="sobre.php"><i class="fas fa-info-circle"></i> Sobre</a> 
-</nav>
-
-</header>
-
-<!-- BANNER -->
 <section class="banner-sobre">
-<h1>Sobre o ConectaSolidária</h1>
-<p>Conectando pessoas que querem ajudar com quem mais precisa</p>
+    <h1>Sobre o ConectaSolidária</h1>
+    <p>Conectando pessoas que querem ajudar com quem mais precisa</p>
 </section>
 
 <main class="sobre-container">
 
-<div class="card-sobre">
-<i class="fas fa-users"></i>
-<h3>Quem somos</h3>
-<p>
-O ConectaSolidária é uma plataforma desenvolvida para conectar doadores a comunidades afetadas por calamidades públicas, promovendo solidariedade através da tecnologia.
-</p>
-</div>
+    <div class="card-sobre">
+        <i class="fas fa-users"></i>
+        <h3>Quem somos</h3>
+        <p>
+            O ConectaSolidária é uma plataforma desenvolvida para conectar doadores a comunidades afetadas por calamidades públicas, promovendo solidariedade através da tecnologia.
+        </p>
+    </div>
 
-<div class="card-sobre">
-<i class="fas fa-bullseye"></i>
-<h3>Nosso propósito</h3>
-<p>
-Facilitar a arrecadação e distribuição de doações de forma rápida, organizada e eficiente, ajudando pessoas em momentos críticos.
-</p>
-</div>
+    <div class="card-sobre">
+        <i class="fas fa-bullseye"></i>
+        <h3>Nosso propósito</h3>
+        <p>
+            Facilitar a arrecadação e distribuição de doações de forma rápida, organizada e eficiente, ajudando pessoas em momentos críticos.
+        </p>
+    </div>
 
-<div class="card-sobre">
-<i class="fas fa-laptop"></i>
-<h3>O que o sistema faz</h3>
-<ul>
-<li>Cadastro de usuario</li>
-<li>Divulgação de necessidades</li>
-<li>Conexão entre doadores e comunidades</li>
-<li>Centralização de informações</li>
-</ul>
-</div>
+    <div class="card-sobre">
+        <i class="fas fa-laptop"></i>
+        <h3>O que o sistema faz</h3>
+        <ul>
+            <li>Cadastro de usuário</li>
+            <li>Divulgação de necessidades</li>
+            <li>Conexão entre doadores e comunidades</li>
+            <li>Centralização de informações</li>
+        </ul>
+    </div>
 
-<div class="card-sobre">
-<i class="fas fa-heart"></i>
-<h3>Nossa missão</h3>
-<p>
-Utilizar a tecnologia como ferramenta de impacto social, ajudando a salvar vidas e apoiar comunidades em situações de emergência.
-</p>
-</div>
+    <div class="card-sobre">
+        <i class="fas fa-heart"></i>
+        <h3>Nossa missão</h3>
+        <p>
+            Utilizar a tecnologia como ferramenta de impacto social, ajudando a salvar vidas e apoiar comunidades em situações de emergência.
+        </p>
+    </div>
 
 </main>
 
 <footer>
-<p>&copy; 2026 ConectaSolidária</p>
+    <p>&copy; 2026 ConectaSolidária</p>
 </footer>
 
 </body>
