@@ -1,44 +1,39 @@
 <?php
-$cidades = [
-    [
-        "nome" => "Brasil",
-        "necessidades" => [
-            "Remédios",
-            "Roupas de cama e banho",
-            "Kits de higiene",
-            "Fraldas descartáveis",
-            "Roupas íntimas novas",
-            "Calçados fechados",
-            "Material de construção",
-            "Ferramentas",
-            "Água potável",
-            "Alimentos não perecíveis",
-            "Colchões e cobertores",
-            "Materiais de limpeza",
-            "Roupas e agasalhos",
-            "Produtos de higiene",
-            "Ração",
-            "Caixas de transporte para animais"
-        ]
-    ]
-];
+include("conexao.php");
+
+$mensagem = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nome = trim($_POST["nome"]);
+    $cpf = trim($_POST["cpf"]);
+    $email = trim($_POST["email"]);
+    $senha = trim($_POST["senha"]);
 
-    $nome = htmlspecialchars($_POST["nome"]);
-    $cpf = htmlspecialchars($_POST["cpf"]);
-    $email = htmlspecialchars($_POST["email"]);
-    $cidade = htmlspecialchars($_POST["cidade"]);
-    $necessidade = htmlspecialchars($_POST["necessidade"]);
-    $descricao = htmlspecialchars($_POST["descricao"]);
+    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-    echo "<h3 style='color:green;'>Cadastro realizado com sucesso!</h3>";
-    echo "Nome: $nome <br>";
-    echo "CPF: $cpf <br>";
-    echo "Email: $email <br>";
-    echo "Cidade: $cidade <br>";
-    echo "Necessidade: $necessidade <br>";
-    echo "Descrição: $descricao <br><hr>";
+    $verifica = "SELECT id FROM usuarios WHERE email = ? OR cpf = ?";
+    $stmtVerifica = $conn->prepare($verifica);
+    $stmtVerifica->bind_param("ss", $email, $cpf);
+    $stmtVerifica->execute();
+    $resultadoVerifica = $stmtVerifica->get_result();
+
+    if ($resultadoVerifica->num_rows > 0) {
+        $mensagem = "Já existe um usuário com esse e-mail ou CPF.";
+    } else {
+        $sql = "INSERT INTO usuarios (nome, cpf, email, senha, tipo) VALUES (?, ?, ?, ?, 'doador')";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssss", $nome, $cpf, $email, $senhaHash);
+
+        if ($stmt->execute()) {
+            $mensagem = "Cadastro realizado com sucesso!";
+        } else {
+            $mensagem = "Erro ao cadastrar usuário.";
+        }
+
+        $stmt->close();
+    }
+
+    $stmtVerifica->close();
 }
 ?>
 
@@ -46,23 +41,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Cadastro</title>
+<title>ConectaSolidária</title>
 
-<!-- Bootstrap -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- CSS -->
 <link rel="stylesheet" href="css/style.css">
-
-<!-- ✅ FONT AWESOME (FALTAVA) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-label::after {
-    content: " *";
-    color: red;
-}
-</style>
 
 </head>
 
@@ -76,7 +58,6 @@ label::after {
     </a>
 </div>
 
-<!-- ✅ NAV PADRONIZADA -->
 <nav>
     <a href="index.php"><i class="fas fa-home"></i> Início</a> 
     <a href="cadastro.php"><i class="fa fa-user"></i> Cadastro</a> 
@@ -86,53 +67,37 @@ label::after {
 </nav>
 
 </header>
-
 <main>
+    <section class="form-section">
+        <h2>Cadastro de Doador</h2>
 
-<h2><strong>Cadastro</strong></h2>
+        <?php if (!empty($mensagem)) : ?>
+            <p><?php echo $mensagem; ?></p>
+        <?php endif; ?>
 
-<form method="POST" action="">
+        <form method="POST">
+            <label for="nome">Nome completo</label>
+            <input type="text" name="nome" id="nome" required>
 
-<label>Nome</label>
-<input type="text" name="nome" required>
+            <label for="cpf">CPF</label>
+            <input type="text" name="cpf" id="cpf" required>
 
-<label>CPF</label>
-<input type="text" name="cpf" required>
+            <label for="email">E-mail</label>
+            <input type="email" name="email" id="email" required>
 
-<label>Email</label>
-<input type="email" name="email" required>
+            <label for="senha">Senha</label>
+            <input type="password" name="senha" id="senha" required>
 
-<label>Cidade</label>
-<input type="text" name="cidade" required>
-
-<label>Necessidade</label>
-<select name="necessidade" required>
-
-<?php
-foreach ($cidades as $cidade) {
-    foreach ($cidade["necessidades"] as $item) {
-        echo "<option value='$item'>$item</option>";
-    }
-}
-?>
-
-</select>
-
-<label>Descrição</label>
-<textarea name="descricao"></textarea>
-
-<br><br>
-<button type="submit" class="btn btn-primary">
-    <i class="fas fa-check"></i> Cadastrar
-</button>
-
-</form>
+            <button type="submit">Cadastrar</button>
+        </form>
+    
+    <footer>
+<p>© 2026 ConectaSolidária</p>
+</footer>
+    </section>
 
 </main>
 
-<footer>
-<p>© 2026 Conecta Solidária</p>
-</footer>
 
 </body>
 </html>
