@@ -100,29 +100,13 @@ $cidades = [
 
 <body>
 
-<header>
-
-<div class="logo-container">
-    <a href="index.php">
-        <img src="images/logo.png" class="logo">
-    </a>
-</div>
-
-<nav>
-    <a href="index.php"><i class="fas fa-home"></i> Início</a> 
-    <a href="cadastro.php"><i class="fa fa-user"></i> Cadastro</a> 
-    <a href="doacao.php"><i class="fas fa-hand-holding-heart"></i> Doação</a>
-    <a href="contato.php"><i class="fas fa-envelope"></i> Contato</a> 
-    <a href="sobre.php"><i class="fas fa-info-circle"></i> Sobre</a> 
-</nav>
-
-</header>
+<?php include("menu.php"); ?>
 
 <main>
 
 <section class="banner">
-<h2>Juntos podemos ajudar mais pessoas</h2>
-<p>Conectamos doadores com comunidades afetadas por calamidades.</p>
+    <h2>Juntos podemos ajudar mais pessoas</h2>
+    <p>Conectamos doadores com comunidades afetadas por calamidades.</p>
 </section>
 
 <h2>Cidades que precisam da sua ajuda</h2>
@@ -132,7 +116,7 @@ $cidades = [
 <?php foreach ($cidades as $cidade): ?>
 
 <div class="card">
-    <img src="<?php echo htmlspecialchars($cidade['imagem']); ?>">
+    <img src="<?php echo htmlspecialchars($cidade['imagem']); ?>" alt="<?php echo htmlspecialchars($cidade['nome']); ?>">
     <h3><?php echo htmlspecialchars($cidade['nome']); ?></h3>
 
     <ul>
@@ -141,9 +125,15 @@ $cidades = [
     <?php endforeach; ?>
     </ul>
 
-   <a href="cadastro.php?cidade=<?php echo urlencode($cidade['nome']); ?>" class="btn btn-primary">
-    <i class="fas fa-hand-holding-heart"></i> Doar
-</a>
+    <?php if (isset($_SESSION["usuario_id"])): ?>
+        <a href="doacao.php?cidade=<?php echo urlencode($cidade['nome']); ?>" class="btn btn-primary">
+            <i class="fas fa-hand-holding-heart"></i> Doar
+        </a>
+    <?php else: ?>
+        <a href="login.php?cidade=<?php echo urlencode($cidade['nome']); ?>" class="btn btn-primary">
+            <i class="fas fa-hand-holding-heart"></i> Doar
+        </a>
+    <?php endif; ?>
 
 </div>
 
@@ -154,7 +144,7 @@ $cidades = [
 </main>
 
 <footer>
-<p>© 2026 Conecta Solidária</p>
+    <p>© 2026 ConectaSolidária</p>
 </footer>
 
 </body>
