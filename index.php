@@ -126,14 +126,14 @@ $cidades = [
     </ul>
 
     <?php if (isset($_SESSION["usuario_id"])): ?>
-        <a href="doacao.php?cidade=<?php echo urlencode($cidade['nome']); ?>" class="btn btn-primary">
-            <i class="fas fa-hand-holding-heart"></i> Doar
-        </a>
-    <?php else: ?>
-        <a href="login.php?cidade=<?php echo urlencode($cidade['nome']); ?>" class="btn btn-primary">
-            <i class="fas fa-hand-holding-heart"></i> Doar
-        </a>
-    <?php endif; ?>
+    <a href="doacao.php?cidade=<?php echo urlencode($cidade['nome']); ?>" class="btn btn-primary">
+        <i class="fas fa-hand-holding-heart"></i> Doar
+    </a>
+<?php else: ?>
+    <a href="cadastro.php?cidade=<?php echo urlencode($cidade['nome']); ?>" class="btn btn-primary">
+        <i class="fas fa-hand-holding-heart"></i> Doar
+    </a>
+<?php endif; ?>
 
 </div>
 
