@@ -36,8 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (count($itensSelecionados) == 0) {
         $mensagem = "Selecione pelo menos 1 item para doação.";
-    } elseif (count($itensSelecionados) > 3) {
-        $mensagem = "Você pode selecionar no máximo 3 itens.";
     } else {
         $sql = "INSERT INTO doacoes (usuario_id, campanha_id, item, quantidade, descricao) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
@@ -81,74 +79,80 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Doação</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-       <style>
-    .form-section {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
+    <style>
+        .form-section {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    .form-section form {
-        width: 100%;
-        max-width: 100%;
-    }
+        .form-section form {
+            width: 100%;
+            max-width: 100%;
+        }
 
-    .itens-box {
-        margin-top: 20px;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-        width: 100%;
-    }
+        .itens-box {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
 
-    .itens-box h3 {
-        grid-column: 1 / -1;
-        margin-bottom: 10px;
-    }
+        .itens-box h3 {
+            grid-column: 1 / -1;
+            margin-bottom: 10px;
+        }
 
-    .item-doacao {
-        border: 1px solid #ddd;
-        padding: 15px;
-        border-radius: 10px;
-        background-color: #f9f9f9;
-        box-sizing: border-box;
-    }
+        .item-doacao {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-sizing: border-box;
+        }
 
-    .item-doacao label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 8px;
-    }
+        .item-doacao label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
 
-    .item-doacao input[type="checkbox"] {
-        margin-right: 8px;
-        transform: scale(1.1);
-        width: auto;
-    }
+        .item-doacao input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.1);
+            width: auto;
+        }
 
-    .item-doacao input[type="number"] {
-        width: 100%;
-        padding: 10px;
-        margin-top: 8px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        box-sizing: border-box;
-    }
+        .item-doacao input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
 
-    .mensagem {
-        margin-bottom: 15px;
-        font-weight: bold;
-        color: green;
-    }
+        .item-doacao input[type="number"]:disabled {
+            background-color: #e5e7eb;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
 
-    .aviso {
-        color: #b00020;
-        font-size: 14px;
-        margin-bottom: 15px;
-    }
-</style>
+        .mensagem {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: green;
+        }
+
+        .aviso {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
 
@@ -172,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <main>
     <section class="form-section">
         <h2>Registrar Doação</h2>
-        <p class="aviso">Selecione até 3 itens para doar.</p>
+        <p class="aviso">Você pode selecionar quantos itens quiser para doar.</p>
 
         <?php if (!empty($mensagem)) : ?>
             <p class="mensagem"><?php echo htmlspecialchars($mensagem); ?></p>
@@ -193,19 +197,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h3>Itens para Doação</h3>
 
                 <?php foreach ($itensDisponiveis as $item) : ?>
+                    <?php $itemId = md5($item); ?>
                     <div class="item-doacao">
                         <label>
-                            <input type="checkbox" name="itens[]" value="<?php echo htmlspecialchars($item); ?>" class="checkbox-item">
+                            <input 
+                                type="checkbox" 
+                                name="itens[]" 
+                                value="<?php echo htmlspecialchars($item); ?>" 
+                                class="checkbox-item"
+                                data-target="qtd_<?php echo $itemId; ?>"
+                            >
                             <?php echo htmlspecialchars($item); ?>
                         </label>
 
-                        <label for="qtd_<?php echo md5($item); ?>">Quantidade</label>
+                        <label for="qtd_<?php echo $itemId; ?>">Quantidade</label>
                         <input 
                             type="number" 
                             name="quantidades[<?php echo htmlspecialchars($item); ?>]" 
-                            id="qtd_<?php echo md5($item); ?>" 
+                            id="qtd_<?php echo $itemId; ?>" 
                             min="1"
                             placeholder="Ex: 5"
+                            disabled
                         >
                     </div>
                 <?php endforeach; ?>
@@ -228,11 +240,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     checkboxes.forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
-            const marcados = document.querySelectorAll('.checkbox-item:checked');
+            const targetId = this.getAttribute('data-target');
+            const campoQuantidade = document.getElementById(targetId);
 
-            if (marcados.length > 3) {
-                this.checked = false;
-                alert('Você pode selecionar no máximo 3 itens.');
+            if (this.checked) {
+                campoQuantidade.disabled = false;
+                campoQuantidade.focus();
+            } else {
+                campoQuantidade.value = "";
+                campoQuantidade.disabled = true;
             }
         });
     });
