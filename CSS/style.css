@@ -1,68 +1,108 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --azul-principal: #2563eb;
+    --azul-escuro: #1e3a8a;
+    --azul-claro: #eff6ff;
+    --branco: #ffffff;
+    --cinza-claro: #f8fafc;
+    --cinza-borda: #e5e7eb;
+    --texto: #1f2937;
+    --texto-suave: #6b7280;
+    --preto: #111827;
+    --sombra: 0 8px 25px rgba(0,0,0,0.08);
+    --sombra-hover: 0 12px 30px rgba(37, 99, 235, 0.15);
+    --radius: 16px;
+}
+
 body{
     font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    background-color: #dbeafe;
-}
-/* CONTEÚDO */
-main{
-    padding: 40px;
-    background-color: #f8f9fa;
+    background: linear-gradient(to bottom, #eef4ff, #f8fafc);
+    color: var(--texto);
 }
 
 /* CABEÇALHO */
 header{
-    background-color: white;
-    color: black;
-    padding: 10px 30px; /* 🔥 mais fino */
+    background-color: rgba(255,255,255,0.95);
+    padding: 14px 30px;
     display: flex;
-    justify-content: flex-start; /* 🔥 tudo pra esquerda */
+    justify-content: flex-start;
     align-items: center;
-    gap: 30px; /* espaço entre logo e menu */
-
+    gap: 40px;
     position: sticky;
     top: 0;
     z-index: 500;
-
-    border-bottom: 1px solid #ddd; /* 🔥 linha elegante */
+    border-bottom: 1px solid var(--cinza-borda);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
 }
 
-/* LOGO */
-.logo {
-    width: 250px; /* 🔥 menor */
+.logo-container{
+    display: flex;
+    align-items: center;
+}
+
+.logo{
+    width: 220px;
     height: auto;
-    transition: 0.3s;
+    transition: transform 0.3s ease;
 }
 
 .logo:hover{
     transform: scale(1.05);
 }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
 /* MENU */
 nav{
     display: flex;
-    gap: 70px;
+    align-items: center;
+    gap: 35px;
+    flex-wrap: wrap;
 }
 
 nav a{
-    color: black;
+    color: var(--preto);
     text-decoration: none;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 19px;
+    transition: 0.3s ease;
+    position: relative;
+}
+
+nav a i{
+    color: var(--azul-principal);
+    margin-right: 6px;
 }
 
 nav a:hover{
-    color: #2563eb;
+    color: var(--azul-principal);
 }
 
-/* LINK ATIVO */
-.active {
-    text-decoration: underline;
+nav a::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 3px;
+    background-color: var(--azul-principal);
+    border-radius: 20px;
+    transition: width 0.3s ease;
+}
+
+nav a:hover::after{
+    width: 100%;
+}
+
+/* CONTEÚDO */
+main{
+    padding: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 /* SEÇÕES */
@@ -72,123 +112,212 @@ section{
 
 /* BANNER */
 .banner{
-    background: linear-gradient(135deg,#2563eb,#1e40af);
+    background: linear-gradient(135deg, #2563eb, #1e40af);
     color: white;
-    padding: 60px 30px;
-    border-radius: 10px;
+    padding: 65px 35px;
+    border-radius: 18px;
     margin-bottom: 40px;
+    box-shadow: var(--sombra);
+    position: relative;
+    overflow: hidden;
+}
+
+.banner::before{
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    top: -60px;
+    right: -40px;
+}
+
+.banner::after{
+    content: "";
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    bottom: -50px;
+    right: 120px;
 }
 
 .banner h2{
-    font-size: 28px;
+    font-size: 38px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
 }
 
 .banner p{
     font-size: 18px;
+    max-width: 700px;
+    position: relative;
+    z-index: 1;
+}
+
+main h2{
+    font-size: 33px;
+    margin-bottom: 24px;
+    color: var(--preto);
 }
 
 /* CARDS */
 .card-container{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
 }
 
 .card{
-    background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    width: 280px;
-    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
+    background-color: var(--branco);
+    padding: 16px;
+    border-radius: var(--radius);
+    box-shadow: var(--sombra);
+    transition: 0.3s ease;
+    border: 1px solid #edf2f7;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .card:hover{
     transform: translateY(-8px);
+    box-shadow: var(--sombra-hover);
 }
 
 .card img{
     width: 100%;
-    border-radius: 8px;
-    margin-bottom: 10px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 14px;
 }
 
 .card h3{
-    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 24px;
+    color: var(--preto);
 }
 
-/* RODAPÉ */
-footer{
-    background-color: #111;
+.card ul{
+    padding-left: 20px;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.card li{
+    margin-bottom: 6px;
+    font-size: 16px;
+}
+
+.btn-primary{
+    background: linear-gradient(135deg, var(--azul-principal), var(--azul-escuro));
     color: white;
-    text-align: center;
-    padding: 25px;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    transition: 0.3s ease;
+    width: fit-content;
+}
+
+.btn-primary:hover{
+    transform: scale(1.05);
+    filter: brightness(1.05);
+    color: white;
 }
 
 /* FORMULÁRIO */
 form{
-    max-width: 500px;
+    max-width: 600px;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: var(--sombra);
 }
 
 input, select, textarea{
     width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    margin-bottom: 14px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus{
+    border-color: var(--azul-principal);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
 
 form button{
-    background-color: #2563eb;
+    background: linear-gradient(135deg, var(--azul-principal), var(--azul-escuro));
     color: white;
     border: none;
-    padding: 12px;
-    border-radius: 6px;
+    padding: 13px 20px;
+    border-radius: 8px;
     cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s ease;
 }
 
 form button:hover{
-    background-color: #1e40af;
+    transform: scale(1.03);
 }
 
-/* BOTÃO DOAR */
-.btn-primary{
-    background-color: #2563eb;
+/* RODAPÉ */
+footer{
+    background-color: #0c1a2b;
     color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    text-decoration: none; /* 🔥 AQUI resolve o sublinhado */
+    text-align: center;
+    padding: 20px 0;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
 }
 
-.btn-primary:hover{
-    background-color: #1e40af;
-    transform: scale(1.05);
-    text-decoration: none; /* 🔥 garante no hover também */
-}
-    
 /* RESPONSIVO */
 @media (max-width: 768px){
-
     header{
         flex-direction: column;
         align-items: flex-start;
+        gap: 20px;
+    }
+
+    nav{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
     }
 
     .logo{
-        width: 150px;
-    }
-
-    .card-container{
-        flex-direction: column;
-        align-items: center;
+        width: 170px;
     }
 
     main{
         padding: 20px;
     }
-}
-a.btn-primary {
-    text-decoration: none !important;
+
+    .banner{
+        padding: 40px 25px;
+    }
+
+    .banner h2{
+        font-size: 28px;
+    }
+
+    .banner p{
+        font-size: 16px;
+    }
 }
