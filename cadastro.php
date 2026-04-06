@@ -1,39 +1,13 @@
 <?php
-include("conexao.php");
-
 $mensagem = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nome = trim($_POST["nome"]);
-    $cpf = trim($_POST["cpf"]);
-    $email = trim($_POST["email"]);
-    $senha = trim($_POST["senha"]);
 
-    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+    $nome = htmlspecialchars($_POST["nome"]);
+    $email = htmlspecialchars($_POST["email"]);
+    $mensagemTexto = htmlspecialchars($_POST["mensagem"]);
 
-    $verifica = "SELECT id FROM usuarios WHERE email = ? OR cpf = ?";
-    $stmtVerifica = $conn->prepare($verifica);
-    $stmtVerifica->bind_param("ss", $email, $cpf);
-    $stmtVerifica->execute();
-    $resultadoVerifica = $stmtVerifica->get_result();
-
-    if ($resultadoVerifica->num_rows > 0) {
-        $mensagem = "Já existe um usuário com esse e-mail ou CPF.";
-    } else {
-        $sql = "INSERT INTO usuarios (nome, cpf, email, senha, tipo) VALUES (?, ?, ?, ?, 'doador')";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssss", $nome, $cpf, $email, $senhaHash);
-
-        if ($stmt->execute()) {
-            $mensagem = "Cadastro realizado com sucesso!";
-        } else {
-            $mensagem = "Erro ao cadastrar usuário.";
-        }
-
-        $stmt->close();
-    }
-
-    $stmtVerifica->close();
+    $mensagem = "Mensagem enviada com sucesso!";
 }
 ?>
 
@@ -41,63 +15,82 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>ConectaSolidária</title>
+<title>Contato</title>
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+label::after {
+    content: " *";
+    color: red;
+}
+</style>
 
 </head>
 
 <body>
 
-<header>
+<?php include("menu.php"); ?>
 
-<div class="logo-container">
-    <a href="index.php">
-        <img src="images/logo.png" class="logo">
-    </a>
+<main class="main-content">
+
+<h2><strong><i class="fas fa-envelope"></i> Entre em Contato</strong></h2>
+
+<p><strong>Endereço:</strong> St. N, Área Especial QNN 14 - Ceilândia, Brasília - DF</p>
+<p><strong>CEP:</strong> 72220-140</p>
+<p><strong>Telefone:</strong> (61) 3345-8714</p>
+<p><strong>Email:</strong> conectasolidaria@gmail.com</p>
+
+<div class="info-item">
+<h3><i class="fas fa-clock"></i> Horário de Funcionamento:</h3>
+<p>Segunda a Sábado: 7:00 às 22:00 (Presencial)</p>
+<p>Domingo: 7:00 às 22:00 (Online)</p>
 </div>
 
-<nav>
-    <a href="index.php"><i class="fas fa-home"></i> Início</a> 
-    <a href="cadastro.php"><i class="fa fa-user"></i> Cadastro</a> 
-    <a href="doacao.php"><i class="fas fa-hand-holding-heart"></i> Doação</a>
-    <a href="contato.php"><i class="fas fa-envelope"></i> Contato</a> 
-    <a href="sobre.php"><i class="fas fa-info-circle"></i> Sobre</a> 
-</nav>
+<?php if ($mensagem != ""): ?>
+    <p style="color: green; font-weight: bold;">
+        <?php echo $mensagem; ?>
+    </p>
+<?php endif; ?>
 
-</header>
-<main>
-    <section class="form-section">
-        <h2>Cadastro de Doador</h2>
+<h3><i class="fas fa-paper-plane"></i> Fale conosco</h3>
 
-        <?php if (!empty($mensagem)) : ?>
-            <p><?php echo $mensagem; ?></p>
-        <?php endif; ?>
+<form method="POST">
 
-        <form method="POST">
-            <label for="nome">Nome completo</label>
-            <input type="text" name="nome" id="nome" required>
+<label>Nome</label>
+<input type="text" name="nome" required>
 
-            <label for="cpf">CPF</label>
-            <input type="text" name="cpf" id="cpf" required>
+<label>Email</label>
+<input type="email" name="email" required>
 
-            <label for="email">E-mail</label>
-            <input type="email" name="email" id="email" required>
+<label>Mensagem</label>
+<textarea name="mensagem" required></textarea>
 
-            <label for="senha">Senha</label>
-            <input type="password" name="senha" id="senha" required>
+<br>
+<button type="submit" class="btn btn-primary">
+    <i class="fas fa-paper-plane"></i> Enviar
+</button>
 
-            <button type="submit">Cadastrar</button>
-        </form>
-    
-    <footer>
-<p>© 2026 ConectaSolidária</p>
-</footer>
-    </section>
+</form>
+
+<div class="map-container">
+<iframe 
+src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3838.513807983534!2d-48.11235582347999!3d-15.829570084815776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935bccfba936f021%3A0x6f07a0a68fc87b4a!2sCEP%20-%20ET%20de%20Ceil%C3%A2ndia!5e0!3m2!1spt-BR!2sbr!4v1763260149736!5m2!1spt-BR!2sbr"
+width="100%" 
+height="450" 
+style="border:0;" 
+allowfullscreen="" 
+loading="lazy">
+</iframe>
+</div>
 
 </main>
 
+<footer>
+<p>&copy; 2026 ConectaSolidária</p>
+</footer>
 
 </body>
 </html>
