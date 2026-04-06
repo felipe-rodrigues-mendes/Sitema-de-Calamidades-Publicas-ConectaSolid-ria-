@@ -83,43 +83,72 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Registrar Doação</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        .itens-box {
-            margin-top: 20px;
-        }
+       <style>
+    .form-section {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
 
-        .item-doacao {
-            border: 1px solid #ddd;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            background-color: #f9f9f9;
-        }
+    .form-section form {
+        width: 100%;
+        max-width: 100%;
+    }
 
-        .item-doacao label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 8px;
-        }
+    .itens-box {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        width: 100%;
+    }
 
-        .item-doacao input[type="number"] {
-            width: 120px;
-            padding: 8px;
-            margin-top: 8px;
-        }
+    .itens-box h3 {
+        grid-column: 1 / -1;
+        margin-bottom: 10px;
+    }
 
-        .mensagem {
-            margin-bottom: 15px;
-            font-weight: bold;
-            color: green;
-        }
+    .item-doacao {
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        box-sizing: border-box;
+    }
 
-        .aviso {
-            color: #b00020;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-    </style>
+    .item-doacao label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .item-doacao input[type="checkbox"] {
+        margin-right: 8px;
+        transform: scale(1.1);
+        width: auto;
+    }
+
+    .item-doacao input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
+
+    .mensagem {
+        margin-bottom: 15px;
+        font-weight: bold;
+        color: green;
+    }
+
+    .aviso {
+        color: #b00020;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+</style>
 </head>
 <body>
 
