@@ -25,7 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("ssss", $nome, $cpf, $email, $senhaHash);
 
         if ($stmt->execute()) {
-            $mensagem = "Cadastro realizado com sucesso!";
+            header("Location: login.php?cadastro=sucesso");
+            exit();
         } else {
             $mensagem = "Erro ao cadastrar usuário.";
         }
@@ -54,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="logo-container">
     <a href="index.php">
-        <img src="images/logo.png" class="logo">
+        <img src="images/logo.png" class="logo" alt="Logo Conecta Solidária">
     </a>
 </div>
 
@@ -67,12 +68,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </nav>
 
 </header>
+
 <main>
     <section class="form-section">
         <h2>Cadastro de Doador</h2>
 
         <?php if (!empty($mensagem)) : ?>
-            <p><?php echo $mensagem; ?></p>
+            <p><?php echo htmlspecialchars($mensagem); ?></p>
         <?php endif; ?>
 
         <form method="POST">
@@ -90,14 +92,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <button type="submit">Cadastrar</button>
         </form>
-    
-    <footer>
-<p>© 2026 ConectaSolidária</p>
-</footer>
     </section>
-
 </main>
 
+<footer>
+    <p>© 2026 ConectaSolidária</p>
+</footer>
 
 </body>
 </html>
