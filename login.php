@@ -3,6 +3,13 @@ session_start();
 include("conexao.php");
 
 $mensagem = "";
+$tipoMensagem = "";
+
+// 🔥 Mensagem vinda do cadastro
+if (isset($_GET["cadastro"]) && $_GET["cadastro"] == "sucesso") {
+    $mensagem = "Cadastro realizado com sucesso! Faça login.";
+    $tipoMensagem = "sucesso";
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST["email"]);
@@ -26,9 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         } else {
             $mensagem = "Senha incorreta.";
+            $tipoMensagem = "erro";
         }
     } else {
         $mensagem = "Usuário não encontrado.";
+        $tipoMensagem = "erro";
     }
 
     $stmt->close();
@@ -42,6 +51,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>ConectaSolidária - Login</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .mensagem {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .mensagem.sucesso {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .mensagem.erro {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+    </style>
 </head>
 <body>
 
@@ -55,10 +85,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <nav>
         <a href="index.php"><i class="fas fa-home"></i> Início</a>
         <a href="cadastro.php"><i class="fa fa-user"></i> Cadastro</a>
-        <a href="login.php"><i class="fas fa-hand-holding-heart"></i> Doação</a>
+        <a href="login.php"><i class="fas fa-sign-in-alt"></i> Login</a>
         <a href="contato.php"><i class="fas fa-envelope"></i> Contato</a>
         <a href="sobre.php"><i class="fas fa-info-circle"></i> Sobre</a>
-        
     </nav>
 </header>
 
@@ -67,7 +96,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2>Entrar no Sistema</h2>
 
         <?php if (!empty($mensagem)) : ?>
-            <p><?php echo $mensagem; ?></p>
+            <p class="mensagem <?php echo $tipoMensagem; ?>">
+                <?php echo htmlspecialchars($mensagem); ?>
+            </p>
         <?php endif; ?>
 
         <form method="POST">
