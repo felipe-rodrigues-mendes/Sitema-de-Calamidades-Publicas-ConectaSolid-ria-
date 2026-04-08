@@ -3,73 +3,95 @@ include("conexao.php");
 include("proteger.php");
 
 $mensagem = "";
+$tipoMensagem = "";
+$cidadeSelecionada = isset($_GET["cidade"]) ? trim($_GET["cidade"]) : "";
 
 // Buscar campanhas ativas
-$sqlCampanhas = "SELECT id, titulo FROM campanhas WHERE status = 'ativa'";
+$sqlCampanhas = "SELECT id, titulo FROM campanhas WHERE status = 'ativa' ORDER BY titulo ASC";
 $resultadoCampanhas = $conn->query($sqlCampanhas);
 
 if (!$resultadoCampanhas) {
     die("Erro ao buscar campanhas: " . $conn->error);
 }
 
-// Lista fixa de itens para doação
-$itensDisponiveis = [
-    "Água potável",
-    "Alimentos não perecíveis",
-    "Kits de higiene",
-    "Roupas e agasalhos",
-    "Colchões e cobertores",
-    "Fraldas descartáveis",
-    "Materiais de limpeza",
-    "Remédios",
-    "Material de construção",
-    "Ferramentas"
-];
+// Buscar categorias de itens no banco
+$sqlCategorias = "SELECT id, nome FROM categorias_itens ORDER BY nome ASC";
+$resultadoCategorias = $conn->query($sqlCategorias);
+
+if (!$resultadoCategorias) {
+    die("Erro ao buscar categorias: " . $conn->error);
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario_id = $_SESSION["usuario_id"];
-    $campanha_id = intval($_POST["campanha_id"]);
-    $descricao = trim($_POST["descricao"]);
+    $campanha_id = isset($_POST["campanha_id"]) ? intval($_POST["campanha_id"]) : 0;
+    $descricao = isset($_POST["descricao"]) ? trim($_POST["descricao"]) : "";
 
     $itensSelecionados = isset($_POST["itens"]) ? $_POST["itens"] : [];
     $quantidades = isset($_POST["quantidades"]) ? $_POST["quantidades"] : [];
 
-    if (count($itensSelecionados) == 0) {
+    if ($campanha_id <= 0) {
+        $mensagem = "Selecione uma campanha válida.";
+        $tipoMensagem = "erro";
+    } elseif (count($itensSelecionados) == 0) {
         $mensagem = "Selecione pelo menos 1 item para doação.";
+        $tipoMensagem = "erro";
     } else {
-        $sql = "INSERT INTO doacoes (usuario_id, campanha_id, item, quantidade, descricao) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
+        $conn->begin_transaction();
 
-        if (!$stmt) {
-            die("Erro no prepare: " . $conn->error);
-        }
+        try {
+            $sqlDoacao = "INSERT INTO doacoes (usuario_id, campanha_id, descricao) VALUES (?, ?, ?)";
+            $stmtDoacao = $conn->prepare($sqlDoacao);
 
-        $sucesso = true;
-
-        foreach ($itensSelecionados as $item) {
-            $quantidade = isset($quantidades[$item]) ? intval($quantidades[$item]) : 0;
-
-            if ($quantidade <= 0) {
-                $sucesso = false;
-                $mensagem = "Informe uma quantidade válida para cada item selecionado.";
-                break;
+            if (!$stmtDoacao) {
+                throw new Exception("Erro ao preparar doação: " . $conn->error);
             }
 
-            $stmt->bind_param("iisis", $usuario_id, $campanha_id, $item, $quantidade, $descricao);
+            $stmtDoacao->bind_param("iis", $usuario_id, $campanha_id, $descricao);
 
-            if (!$stmt->execute()) {
-                $sucesso = false;
-                $mensagem = "Erro ao registrar doação: " . $stmt->error;
-                break;
+            if (!$stmtDoacao->execute()) {
+                throw new Exception("Erro ao registrar doação: " . $stmtDoacao->error);
             }
-        }
 
-        if ($sucesso) {
+            $doacao_id = $conn->insert_id;
+            $stmtDoacao->close();
+
+            $sqlItem = "INSERT INTO itens_doacao (doacao_id, categoria_id, quantidade) VALUES (?, ?, ?)";
+            $stmtItem = $conn->prepare($sqlItem);
+
+            if (!$stmtItem) {
+                throw new Exception("Erro ao preparar itens da doação: " . $conn->error);
+            }
+
+            foreach ($itensSelecionados as $categoria_id) {
+                $categoria_id = intval($categoria_id);
+                $quantidade = isset($quantidades[$categoria_id]) ? intval($quantidades[$categoria_id]) : 0;
+
+                if ($categoria_id <= 0 || $quantidade <= 0) {
+                    throw new Exception("Informe uma quantidade válida para cada item selecionado.");
+                }
+
+                $stmtItem->bind_param("iii", $doacao_id, $categoria_id, $quantidade);
+
+                if (!$stmtItem->execute()) {
+                    throw new Exception("Erro ao registrar item da doação: " . $stmtItem->error);
+                }
+            }
+
+            $stmtItem->close();
+
+            $conn->commit();
             $mensagem = "Doação registrada com sucesso!";
+            $tipoMensagem = "sucesso";
+        } catch (Exception $e) {
+            $conn->rollback();
+            $mensagem = $e->getMessage();
+            $tipoMensagem = "erro";
         }
-
-        $stmt->close();
     }
+
+    $resultadoCampanhas = $conn->query($sqlCampanhas);
+    $resultadoCategorias = $conn->query($sqlCategorias);
 }
 ?>
 
@@ -135,7 +157,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             box-sizing: border-box;
         }
 
-        .item-doacao input[type="number"]:disabled {
+        .item-doacao input[type="number"]:disabled,
+        .item-doacao input[type="checkbox"]:disabled {
             background-color: #e5e7eb;
             cursor: not-allowed;
             opacity: 0.7;
@@ -144,7 +167,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .mensagem {
             margin-bottom: 15px;
             font-weight: bold;
-            color: green;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .mensagem.sucesso {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .mensagem.erro {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
         }
 
         .aviso {
@@ -176,10 +212,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <main>
     <section class="form-section">
         <h2>Registrar Doação</h2>
-        <p class="aviso">Você pode selecionar quantos itens quiser para doar.</p>
+        <p class="aviso">Primeiro selecione uma campanha. Depois escolha os itens que deseja doar.</p>
 
         <?php if (!empty($mensagem)) : ?>
-            <p class="mensagem"><?php echo htmlspecialchars($mensagem); ?></p>
+            <p class="mensagem <?php echo $tipoMensagem; ?>">
+                <?php echo htmlspecialchars($mensagem); ?>
+            </p>
         <?php endif; ?>
 
         <form method="POST" id="formDoacao">
@@ -187,7 +225,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <select name="campanha_id" id="campanha_id" required>
                 <option value="">Selecione uma campanha</option>
                 <?php while ($campanha = $resultadoCampanhas->fetch_assoc()) : ?>
-                    <option value="<?php echo $campanha["id"]; ?>">
+                    <option 
+                        value="<?php echo $campanha["id"]; ?>"
+                        <?php echo ($cidadeSelecionada === $campanha["titulo"]) ? "selected" : ""; ?>
+                    >
                         <?php echo htmlspecialchars($campanha["titulo"]); ?>
                     </option>
                 <?php endwhile; ?>
@@ -196,31 +237,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="itens-box">
                 <h3>Itens para Doação</h3>
 
-                <?php foreach ($itensDisponiveis as $item) : ?>
-                    <?php $itemId = md5($item); ?>
+                <?php while ($categoria = $resultadoCategorias->fetch_assoc()) : ?>
                     <div class="item-doacao">
                         <label>
                             <input 
                                 type="checkbox" 
                                 name="itens[]" 
-                                value="<?php echo htmlspecialchars($item); ?>" 
+                                value="<?php echo $categoria["id"]; ?>"
                                 class="checkbox-item"
-                                data-target="qtd_<?php echo $itemId; ?>"
+                                data-target="qtd_<?php echo $categoria["id"]; ?>"
                             >
-                            <?php echo htmlspecialchars($item); ?>
+                            <?php echo htmlspecialchars($categoria["nome"]); ?>
                         </label>
 
-                        <label for="qtd_<?php echo $itemId; ?>">Quantidade</label>
+                        <label for="qtd_<?php echo $categoria["id"]; ?>">Quantidade</label>
                         <input 
                             type="number" 
-                            name="quantidades[<?php echo htmlspecialchars($item); ?>]" 
-                            id="qtd_<?php echo $itemId; ?>" 
+                            name="quantidades[<?php echo $categoria["id"]; ?>]" 
+                            id="qtd_<?php echo $categoria["id"]; ?>" 
                             min="1"
                             placeholder="Ex: 5"
                             disabled
                         >
                     </div>
-                <?php endforeach; ?>
+                <?php endwhile; ?>
             </div>
 
             <label for="descricao">Descrição complementar</label>
@@ -236,7 +276,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </footer>
 
 <script>
+    const selectCampanha = document.getElementById('campanha_id');
     const checkboxes = document.querySelectorAll('.checkbox-item');
+
+    function atualizarEstadoItens() {
+        const campanhaSelecionada = selectCampanha.value !== "";
+
+        checkboxes.forEach(function(checkbox) {
+            const targetId = checkbox.getAttribute('data-target');
+            const campoQuantidade = document.getElementById(targetId);
+
+            checkbox.disabled = !campanhaSelecionada;
+
+            if (!campanhaSelecionada) {
+                checkbox.checked = false;
+                campoQuantidade.value = "";
+                campoQuantidade.disabled = true;
+            }
+        });
+    }
 
     checkboxes.forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
@@ -252,6 +310,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         });
     });
+
+    selectCampanha.addEventListener('change', atualizarEstadoItens);
+
+    atualizarEstadoItens();
 </script>
 
 </body>
