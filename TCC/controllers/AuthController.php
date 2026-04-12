@@ -31,6 +31,11 @@ class AuthController {
             $tipoMensagem = 'sucesso';
         }
 
+        if (isset($_GET['reset']) && $_GET['reset'] === 'sucesso') {
+    $mensagem = 'Senha redefinida com sucesso! Faça login.';
+    $tipoMensagem = 'sucesso';
+}
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!SessionManager::validateCsrfToken($_POST['csrf_token'] ?? null)) {
                 $mensagem = 'Sua sessão expirou. Atualize a página e tente novamente.';
@@ -69,6 +74,41 @@ class AuthController {
 
         include __DIR__ . '/../views/auth/login.php';
     }
+
+    public function forgot(): void {
+    $mensagem = "";
+    $tipoMensagem = "";
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!SessionManager::validateCsrfToken($_POST['csrf_token'] ?? null)) {
+            $mensagem = 'Sua sessão expirou. Atualize a página e tente novamente.';
+            $tipoMensagem = 'erro';
+            include __DIR__ . '/../views/auth/forgot.php';
+            return;
+        }
+
+        $email = trim($_POST['email'] ?? '');
+
+        if (empty($email)) {
+            $mensagem = 'Informe o e-mail.';
+            $tipoMensagem = 'erro';
+        } else {
+            $token = bin2hex(random_bytes(32));
+            $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
+
+            if ($this->userDAO->saveRecoveryToken($email, $token, $expira)) {
+                $mensagem = "Link de recuperação gerado com sucesso:<br>
+                <a href='index.php?page=reset&token=$token'>Clique aqui para redefinir sua senha</a>";
+                $tipoMensagem = 'sucesso';
+            } else {
+                $mensagem = 'E-mail não encontrado.';
+                $tipoMensagem = 'erro';
+            }
+        }
+    }
+
+    include __DIR__ . '/../views/auth/forgot.php';
+}
 
     /**
      * Renderiza página de cadastro
@@ -110,6 +150,45 @@ class AuthController {
 
         include __DIR__ . '/../views/auth/register.php';
     }
+
+    public function reset(): void {
+    $mensagem = "";
+    $tipoMensagem = "";
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!SessionManager::validateCsrfToken($_POST['csrf_token'] ?? null)) {
+            $mensagem = 'Sua sessão expirou. Atualize a página e tente novamente.';
+            $tipoMensagem = 'erro';
+            include __DIR__ . '/../views/auth/reset.php';
+            return;
+        }
+
+        $token = trim($_POST['token'] ?? '');
+        $senha = trim($_POST['senha'] ?? '');
+        $confirmarSenha = trim($_POST['confirmar_senha'] ?? '');
+
+        if (empty($token) || empty($senha) || empty($confirmarSenha)) {
+            $mensagem = 'Preencha todos os campos.';
+            $tipoMensagem = 'erro';
+        } elseif (strlen($senha) < 6) {
+            $mensagem = 'A senha deve ter no mínimo 6 caracteres.';
+            $tipoMensagem = 'erro';
+        } elseif ($senha !== $confirmarSenha) {
+            $mensagem = 'As senhas não coincidem.';
+            $tipoMensagem = 'erro';
+        } else {
+            if ($this->userDAO->resetPassword($token, $senha)) {
+                header('Location: index.php?page=login&reset=sucesso');
+                exit;
+            } else {
+                $mensagem = 'Token inválido ou expirado.';
+                $tipoMensagem = 'erro';
+            }
+        }
+    }
+
+    include __DIR__ . '/../views/auth/reset.php';
+}
 
     /**
      * Faz logout do usuário

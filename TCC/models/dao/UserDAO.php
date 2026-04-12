@@ -60,6 +60,87 @@ class UserDAO {
         return $perfilId;
     }
 
+
+    public function saveRecoveryToken(string $email, string $token, string $expira): bool {
+    $sql = "
+        UPDATE login l
+        INNER JOIN usuario u ON u.id_usuario = l.id_usuario
+        SET l.token_recuperacao = ?, l.token_expira = ?
+        WHERE u.email = ?
+    ";
+
+    $stmt = $this->conn->prepare($sql);
+
+    if (!$stmt) {
+        error_log("Erro ao preparar query: " . $this->conn->error);
+        return false;
+    }
+
+    $stmt->bind_param("sss", $token, $expira, $email);
+
+    if ($stmt->execute()) {
+        return $stmt->affected_rows > 0;
+    }
+
+    return false;
+}
+
+public function resetPassword(string $token, string $senha): bool {
+    $sql = "
+        SELECT id_usuario
+        FROM login
+        WHERE token_recuperacao = ?
+          AND token_expira > NOW()
+        LIMIT 1
+    ";
+
+    $stmt = $this->conn->prepare($sql);
+
+    if (!$stmt) {
+        error_log("Erro ao preparar busca do token: " . $this->conn->error);
+        return false;
+    }
+
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    if ($resultado->num_rows !== 1) {
+        $stmt->close();
+        return false;
+    }
+
+    $dados = $resultado->fetch_assoc();
+    $stmt->close();
+
+    $novaSenhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
+    if ($novaSenhaHash === false) {
+        return false;
+    }
+
+    $sqlUpdate = "
+        UPDATE login
+        SET senha_hash = ?,
+            token_recuperacao = NULL,
+            token_expira = NULL
+        WHERE id_usuario = ?
+    ";
+
+    $stmtUpdate = $this->conn->prepare($sqlUpdate);
+
+    if (!$stmtUpdate) {
+        error_log("Erro ao preparar atualização de senha: " . $this->conn->error);
+        return false;
+    }
+
+    $stmtUpdate->bind_param("si", $novaSenhaHash, $dados['id_usuario']);
+    $ok = $stmtUpdate->execute();
+    $stmtUpdate->close();
+
+    return $ok;
+}
+
     /**
      * Busca usuário por email ou username.
      * @return UserDTO|null

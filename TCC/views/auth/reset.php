@@ -1,6 +1,7 @@
 <?php
-// View: Login
-// Renderizada por AuthController::login()
+// View: Redefinir senha
+// Renderizada por AuthController::reset()
+$token = $_GET['token'] ?? ($_POST['token'] ?? '');
 ?>
 
 <!DOCTYPE html>
@@ -8,10 +9,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ConectaSolidária</title>
+    <title>Redefinir Senha - ConectaSolidária</title>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
+
     <style>
         .mensagem {
             margin-bottom: 15px;
@@ -42,7 +43,7 @@
         }
 
         .form-section h2 {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-align: center;
             color: var(--preto);
         }
@@ -62,6 +63,12 @@
         .form-section a:hover {
             text-decoration: underline;
         }
+
+        .descricao {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--texto-suave);
+        }
     </style>
 </head>
 <body>
@@ -70,30 +77,29 @@
 
 <main>
     <section class="form-section">
-        <h2>Entrar no Sistema</h2>
+        <h2>Redefinir Senha</h2>
+        <p class="descricao">Digite sua nova senha abaixo.</p>
 
         <?php if (!empty($mensagem)) : ?>
-            <p class="mensagem <?php echo htmlspecialchars($tipoMensagem); ?>">
+            <p class="mensagem <?php echo htmlspecialchars($tipoMensagem ?? 'erro'); ?>">
                 <?php echo htmlspecialchars($mensagem); ?>
             </p>
         <?php endif; ?>
 
         <form method="POST">
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(SessionManager::getCsrfToken()); ?>">
+            <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
 
-            <label for="email">E-mail</label>
-            <input type="email" name="email" id="email" required>
-
-            <label for="senha">Senha</label>
+            <label for="senha">Nova senha</label>
             <input type="password" name="senha" id="senha" required>
 
-            <button type="submit">Entrar</button>
-            <p>
-    <a href="index.php?page=forgot">Esqueceu sua senha?</a>
-</p>
+            <label for="confirmar_senha">Confirmar nova senha</label>
+            <input type="password" name="confirmar_senha" id="confirmar_senha" required>
+
+            <button type="submit">Alterar senha</button>
         </form>
 
-        <p>Não tem conta? <a href="index.php?page=register">Cadastre-se aqui</a></p>
+        <p><a href="index.php?page=login">Voltar para o login</a></p>
     </section>
 </main>
 

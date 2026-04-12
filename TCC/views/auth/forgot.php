@@ -1,6 +1,6 @@
 <?php
-// View: Login
-// Renderizada por AuthController::login()
+// View: Recuperar senha
+// Renderizada por AuthController::forgot()
 ?>
 
 <!DOCTYPE html>
@@ -8,10 +8,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - ConectaSolidária</title>
+    <title>Recuperar Senha - ConectaSolidária</title>
     <link rel="stylesheet" href="assets/css/style.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
+
     <style>
         .mensagem {
             margin-bottom: 15px;
@@ -42,7 +42,7 @@
         }
 
         .form-section h2 {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-align: center;
             color: var(--preto);
         }
@@ -62,6 +62,12 @@
         .form-section a:hover {
             text-decoration: underline;
         }
+
+        .descricao {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--texto-suave);
+        }
     </style>
 </head>
 <body>
@@ -70,11 +76,12 @@
 
 <main>
     <section class="form-section">
-        <h2>Entrar no Sistema</h2>
+        <h2>Recuperar Senha</h2>
+        <p class="descricao">Informe seu e-mail para redefinir sua senha.</p>
 
         <?php if (!empty($mensagem)) : ?>
-            <p class="mensagem <?php echo htmlspecialchars($tipoMensagem); ?>">
-                <?php echo htmlspecialchars($mensagem); ?>
+            <p class="mensagem <?php echo htmlspecialchars($tipoMensagem ?? 'erro'); ?>">
+                <?php echo $mensagem; ?>
             </p>
         <?php endif; ?>
 
@@ -84,16 +91,10 @@
             <label for="email">E-mail</label>
             <input type="email" name="email" id="email" required>
 
-            <label for="senha">Senha</label>
-            <input type="password" name="senha" id="senha" required>
-
-            <button type="submit">Entrar</button>
-            <p>
-    <a href="index.php?page=forgot">Esqueceu sua senha?</a>
-</p>
+            <button type="submit">Enviar link</button>
         </form>
 
-        <p>Não tem conta? <a href="index.php?page=register">Cadastre-se aqui</a></p>
+        <p><a href="index.php?page=login">Voltar para o login</a></p>
     </section>
 </main>
 
